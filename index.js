@@ -186,7 +186,7 @@ function getEvolutionTreeGraph(startId) {
 // 起動
 // =======================
 
-client.once('ready', () => {
+client.on("clientReady", () => {
   console.log('Bot起動!');
 });
 
