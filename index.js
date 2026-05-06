@@ -52,6 +52,9 @@ const {
 
 const db = require('./db');
 
+const rows = db.prepare("SELECT COUNT(*) as count FROM crystals").get();
+console.log("データ件数:", rows.count);
+
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
