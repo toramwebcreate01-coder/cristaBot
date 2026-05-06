@@ -1,15 +1,10 @@
 {
   "name": "cristabot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "better-sqlite3": "^12.9.0",
     "csv-parser": "^3.2.0",
