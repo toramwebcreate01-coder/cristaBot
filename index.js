@@ -276,8 +276,8 @@ const type = TYPE_MAP[rawType];
 if (!type) {
   return interaction.reply({
     content: "❌ タイプ不正\nnormal / weapon / armor / option / accessories\nまたは 日本語（通常・武器・防具・追加・特殊）",
-    ephemeral: true
-  });
+    flags: 64
+});
 }
         const statsRaw = interaction.fields.getTextInputValue("stats");
 
@@ -316,8 +316,8 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
 }
         return interaction.reply({
           content: `✅ ${name} を追加しました`,
-          ephemeral: true
-        });
+           flags: 64
+});
       }
 
       // 進化追加
@@ -332,8 +332,8 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
         if (!fromId || !toId) {
           return interaction.reply({
             content: "❌ クリスタが見つかりません",
-            ephemeral: true
-          });
+             flags: 64
+});
         }
 
         db.prepare(`
@@ -343,8 +343,8 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
 
         return interaction.reply({
           content: `✅ ${from} → ${to} を追加しました`,
-          ephemeral: true
-        });
+           flags: 64
+});
       }
 //クリスタ編集
 if (interaction.customId.startsWith("modal_edit_")) {
@@ -358,8 +358,8 @@ const type = TYPE_MAP[rawType];
 if (!type) {
   return interaction.reply({
     content: "❌ タイプ不正",
-    ephemeral: true
-  });
+     flags: 64
+});
 } 
   const statsRaw = interaction.fields.getTextInputValue("stats");
 
@@ -402,8 +402,8 @@ WHERE id = ?
 
   return interaction.reply({
     content: `✏️ 更新しました`,
-    ephemeral: true
-  });
+     flags: 64
+});
 }
     }
 
@@ -418,8 +418,8 @@ WHERE id = ?
         if (interaction.channelId !== ADMIN_CHANNEL_ID) {
   return interaction.reply({
     content: "管理チャンネルで使用してください",
-    ephemeral: true
-  });
+     flags: 64
+});
 }
 
         const modal = new ModalBuilder()
@@ -482,8 +482,8 @@ if (interaction.customId === "admin_list") {
   if (!crystals.length) {
     return interaction.reply({
       content: "データなし",
-      ephemeral: true
-    });
+       flags: 64
+});
   }
 
   const select = new ActionRowBuilder().addComponents(
@@ -501,8 +501,8 @@ if (interaction.customId === "admin_list") {
   return interaction.reply({
     content: "📦 クリスタ一覧",
     components: [select],
-    ephemeral: true
-  });
+    flags: 64
+});
 }
 
 if (interaction.customId.startsWith("admin_delete_")) {
@@ -514,8 +514,8 @@ if (interaction.customId.startsWith("admin_delete_")) {
   if (!crystal) {
     return interaction.reply({
       content: "❌ すでに削除されています",
-      ephemeral: true
-    });
+       flags: 64
+});
   }
 
   // stats削除
@@ -535,8 +535,8 @@ if (interaction.customId.startsWith("admin_delete_")) {
 
   return interaction.reply({
     content: "🗑 削除しました",
-    ephemeral: true
-  });
+     flags: 64
+});
 }
 
       // 進化表示
@@ -566,8 +566,8 @@ if (interaction.customId.startsWith("admin_edit_")) {
   if (!crystal) {
     return interaction.reply({
       content: "データなし",
-      ephemeral: true
-    });
+       flags: 64
+});
   }
 
   const modal = new ModalBuilder()
@@ -618,8 +618,8 @@ const type = new TextInputBuilder()
     if (!crystal) {
       return interaction.reply({
         content: "データなし",
-        ephemeral: true
-      });
+         flags: 64
+});
     }
 
     const statsText = (crystal.stats || [])
@@ -679,8 +679,8 @@ const type = new TextInputBuilder()
 
     return interaction.reply({
       content: "検索チャンネルで使用してください",
-      ephemeral: true
-    });
+      flags: 64
+});
   }
 
   console.log("チャンネル一致");
@@ -898,7 +898,10 @@ if (!results.length) {
     if (interaction.commandName === "admin") {
 
       if (!isAdmin(interaction)) {
-        return interaction.reply({ content: "権限なし", ephemeral: true });
+        return interaction.reply({ 
+          content: "権限なし", 
+           flags: 64
+});
       }
 
       const row = new ActionRowBuilder().addComponents(
@@ -921,8 +924,8 @@ if (!results.length) {
       return interaction.reply({
         content: "🛠 管理パネル",
         components: [row],
-        ephemeral: true
-      });
+         flags: 64
+});
     }
 
   } catch (e) {
