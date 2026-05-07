@@ -542,7 +542,9 @@ if (interaction.customId.startsWith("admin_delete_")) {
       // 進化表示
       if (interaction.customId.startsWith("evo_")) {
 
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({
+  flags: 64
+});
 
         const id = interaction.customId.replace("evo_", "");
         const text = getEvolutionTreeGraph(id);
@@ -650,13 +652,9 @@ const embed = new EmbedBuilder()
     .setStyle(ButtonStyle.Danger)
 );
 
-        return interaction.reply({
-          embeds: [embed],
-          components: [row],
-          ephemeral: true
-        });
-      }
-    }
+       interaction.reply({
+  flags: 64
+})
 
     // ======================
     // ⛔ コマンド以外除外
