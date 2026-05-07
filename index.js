@@ -376,7 +376,7 @@ WHERE id = ?
   `).run(id);
 
   // 再登録
-  for (const pair of statsRaw.split(",")) {
+ for (const pair of statsRaw.split(/[ ,]+/)) {
 
   let [k, v] = pair.split("=");
 
@@ -395,15 +395,17 @@ WHERE id = ?
     value = Number(v);
   }
 
+  if (isNaN(value)) continue;
+
   db.prepare(`
     INSERT INTO stats (crystal_id, name, value, unit)
     VALUES (?, ?, ?, ?)
-  `).run(id, k, value, unit);
+  `).run(crystalId, k, value, unit);
 }
 
-  return interaction.reply({
-    content: `✏️ 更新しました`,
-     flags: 64
+return interaction.reply({
+  content: `✅ ${name} を追加しました`,
+  flags: 64
 });
 }
     }
