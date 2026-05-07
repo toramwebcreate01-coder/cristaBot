@@ -309,10 +309,10 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
 
   if (isNaN(value)) continue;
 
-  db.prepare(`
-    INSERT INTO stats (crystal_id, name, value, unit)
-    VALUES (?, ?, ?, ?)
-  `).run(crystalId, k, value, unit);
+ db.prepare(`
+  INSERT INTO evolutions (from_id, to_id)
+  VALUES (?, ?)
+`).run(fromId, toId);
 }
         return interaction.reply({
           content: `✅ ${name} を追加しました`,
@@ -397,7 +397,7 @@ WHERE id = ?
   db.prepare(`
     INSERT INTO stats (crystal_id, name, value, unit)
     VALUES (?, ?, ?, ?)
-  `).run(result.lastInsertRowid, k, value, unit);
+  `).run(id, k, value, unit);
 }
 
   return interaction.reply({
@@ -652,9 +652,11 @@ const embed = new EmbedBuilder()
     .setStyle(ButtonStyle.Danger)
 );
 
-       interaction.reply({
+       return interaction.reply({
+  embeds: [embed],
+  components: [row],
   flags: 64
-})
+});
 
     // ======================
     // ⛔ コマンド以外除外
@@ -682,8 +684,8 @@ const embed = new EmbedBuilder()
   console.log("チャンネル一致");
 
   await interaction.deferReply({
-    ephemeral: true
-  });
+  flags: 64
+});
 
 const raw = interaction.options.getString("query").toLowerCase();
 
@@ -823,7 +825,7 @@ if (!results.length) {
   // セレクト
   if (i.customId === "select") {
 
-  await i.deferReply({ ephemeral: true }); // ← これ追加
+  await i.deferReply({ flags: 64 });// ← これ追加
 
   const target = getCrystalWithStats(i.values[0]);
 
