@@ -83,9 +83,9 @@ function normalize(text) {
     .trim();
 }
 
-const ADMIN_CHANNEL_ID = "https://discordapp.com/channels/1495308344053862460/1495313770665218058";
+const ADMIN_CHANNEL_ID = "1495308344053862460/1495313770665218058";
 
-const SEARCH_CHANNEL_ID = "https://discordapp.com/channels/1495308344053862460/1495313250735231056";
+const SEARCH_CHANNEL_ID = "1495308344053862460/1495313250735231056";
 
 // =======================
 // DB
