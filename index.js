@@ -309,14 +309,17 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
 
   if (isNaN(value)) continue;
 
- db.prepare(`
-  INSERT INTO stats (crystal_id, name, value, unit)
-  VALUES (?, ?, ?, ?)
-`).run(crystalId, k, value, unit);
-  
-        return interaction.reply({
-          content: `✅ ${name} を追加しました`,
-           flags: 64
+  db.prepare(`
+    INSERT INTO stats (crystal_id, name, value, unit)
+    VALUES (?, ?, ?, ?)
+  `).run(crystalId, k, value, unit);
+}
+
+// ← for文を閉じる
+
+return interaction.reply({
+  content: `✅ ${name} を追加しました`,
+  flags: 64
 });
       }
 
