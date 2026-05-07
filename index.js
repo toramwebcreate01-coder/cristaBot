@@ -599,10 +599,10 @@ const type = new TextInputBuilder()
     );
 
   modal.addComponents(
-    new ActionRowBuilder().addComponents(name),
-　  new ActionRowBuilder().addComponents(type),
-    new ActionRowBuilder().addComponents(stats)
-  );
+  new ActionRowBuilder().addComponents(name),
+  new ActionRowBuilder().addComponents(type),
+  new ActionRowBuilder().addComponents(stats)
+);
 
   return interaction.showModal(modal);
 }
@@ -812,7 +812,7 @@ if (!results.length) {
   filter: i => i.user.id === interaction.user.id
 });
 
-      collector.on("collect", async i => {
+ collector.on("collect", async i => {
 
   // ▶ 次ページ
   if (i.customId === "next") {
@@ -829,40 +829,40 @@ if (!results.length) {
   // セレクト
   if (i.customId === "select") {
 
-  await i.deferReply({ flags: 64 });// ← これ追加
+    await i.deferReply({ flags: 64 });
 
-  const target = getCrystalWithStats(i.values[0]);
+    const target = getCrystalWithStats(i.values[0]);
 
-  const statsText = (target.stats || [])
-    .map(s => {
-      const icon = s.unit === "%" ? "🔵" : "⚪";
-      const sign = s.value >= 0 ? "+" : "";
-      return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
-    })
-    .join("\n");
+    const statsText = (target.stats || [])
+      .map(s => {
+        const icon = s.unit === "%" ? "🔵" : "⚪";
+        const sign = s.value >= 0 ? "+" : "";
+        return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
+      })
+      .join("\n");
 
-  const embed = new EmbedBuilder()
-    .setTitle(`${TYPE_ICON[target.type] || "🔹"} ${target.name}`)
-    .setDescription(statsText || "ステータスなし")
-    .setColor(TYPE_COLOR[target.type] || 0x95A5A6)
-    .addFields({
-      name: "タイプ",
-      value: TYPE_LABEL[target.type] || target.type,
-      inline: true
+    const embed = new EmbedBuilder()
+      .setTitle(`${TYPE_ICON[target.type] || "🔹"} ${target.name}`)
+      .setDescription(statsText || "ステータスなし")
+      .setColor(TYPE_COLOR[target.type] || 0x95A5A6)
+      .addFields({
+        name: "タイプ",
+        value: TYPE_LABEL[target.type] || target.type,
+        inline: true
+      });
+
+    const btn = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`evo_${target.id}`)
+        .setLabel("進化を見る")
+        .setStyle(ButtonStyle.Secondary)
+    );
+
+    return i.editReply({
+      embeds: [embed],
+      components: [btn]
     });
-
-  const btn = new ActionRowBuilder().addComponents(
-    new ButtonBuilder()
-      .setCustomId(`evo_${target.id}`)
-      .setLabel("進化を見る")
-      .setStyle(ButtonStyle.Secondary)
-  );
-
-  return i.editReply({
-    embeds: [embed],
-    components: [btn]
-  });
-}
+  }
 });
 
       return;
