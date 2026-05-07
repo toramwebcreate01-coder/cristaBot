@@ -310,10 +310,10 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
   if (isNaN(value)) continue;
 
  db.prepare(`
-  INSERT INTO evolutions (from_id, to_id)
-  VALUES (?, ?)
-`).run(fromId, toId);
-}
+  INSERT INTO stats (crystal_id, name, value, unit)
+  VALUES (?, ?, ?, ?)
+`).run(crystalId, k, value, unit);
+  
         return interaction.reply({
           content: `✅ ${name} を追加しました`,
            flags: 64
@@ -337,9 +337,10 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
         }
 
         db.prepare(`
-  INSERT INTO stats (crystal_id, name, value, unit)
-  VALUES (?, ?, ?, ?)
-`).run(id, k, value, unit);
+ db.prepare(`
+  INSERT INTO evolutions (from_id, to_id)
+  VALUES (?, ?)
+`).run(fromId, toId);
 
         return interaction.reply({
           content: `✅ ${from} → ${to} を追加しました`,
@@ -871,7 +872,9 @@ if (!results.length) {
     // ======================
     if (interaction.commandName === "evolution") {
 
-      await interaction.deferReply();
+     await interaction.deferReply({
+  flags: 64
+});
 
       const name = interaction.options.getString("name");
       const target = getAllCrystals().find(c => c.name.includes(name));
@@ -937,4 +940,6 @@ if (!results.length) {
 // 🔐 ログイン
 // =======================
 console.log("Bot起動開始");
+process.on("unhandledRejection", console.error);
+process.on("uncaughtException", console.error);
 client.login(process.env.DISCORD_TOKEN);
