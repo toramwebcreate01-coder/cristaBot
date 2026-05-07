@@ -52,9 +52,6 @@ const {
 
 const db = require('./db');
 
-const rows = db.prepare("SELECT COUNT(*) as count FROM crystals").get();
-console.log("データ件数:", rows.count);
-
 try {
   const rows = db.prepare("SELECT COUNT(*) as count FROM crystals").get();
   console.log("データ件数:", rows.count);
@@ -85,6 +82,10 @@ function normalize(text) {
     .replace(/[+％%]/g, "")
     .trim();
 }
+
+const ADMIN_CHANNEL_ID = "管理チャンネルID";
+
+const SEARCH_CHANNEL_ID = "検索チャンネルID";
 
 // =======================
 // DB
@@ -281,9 +282,11 @@ if (!type) {
         const statsRaw = interaction.fields.getTextInputValue("stats");
 
         const result = db.prepare(`
-          INSERT INTO crystals (name, type)
-          VALUES (?, ?)
-        `).run(name, type);
+  INSERT INTO crystals (name, type)
+  VALUES (?, ?)
+`).run(name, type);
+
+const crystalId = result.lastInsertRowid;
 
 for (const pair of statsRaw.split(/[ ,]+/)) {
 
@@ -309,7 +312,7 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
   db.prepare(`
     INSERT INTO stats (crystal_id, name, value, unit)
     VALUES (?, ?, ?, ?)
-  `).run(id, k, value, unit);
+  `).run(crystalId, k, value, unit);
 }
         return interaction.reply({
           content: `✅ ${name} を追加しました`,
@@ -334,9 +337,9 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
         }
 
         db.prepare(`
-          INSERT INTO evolutions (from_id, to_id)
-          VALUES (?, ?)
-        `).run(fromId, toId);
+  INSERT INTO stats (crystal_id, name, value, unit)
+  VALUES (?, ?, ?, ?)
+`).run(id, k, value, unit);
 
         return interaction.reply({
           content: `✅ ${from} → ${to} を追加しました`,
@@ -411,6 +414,13 @@ WHERE id = ?
 
       // クリスタ追加UI
       if (interaction.customId === "admin_add_crystal") {
+
+        if (interaction.channelId !== ADMIN_CHANNEL_ID) {
+  return interaction.reply({
+    content: "管理チャンネルで使用してください",
+    ephemeral: true
+  });
+}
 
         const modal = new ModalBuilder()
           .setCustomId("modal_add_crystal")
@@ -658,7 +668,16 @@ const embed = new EmbedBuilder()
     // ======================
     if (interaction.commandName === "search") {
 
-      await interaction.deferReply();
+      if (interaction.channelId !== SEARCH_CHANNEL_ID) {
+  return interaction.reply({
+    content: "検索チャンネルで使用してください",
+    ephemeral: true
+  });
+}
+
+      await interaction.deferReply({
+  ephemeral: true
+});
 
 const raw = interaction.options.getString("query").toLowerCase();
 
@@ -904,5 +923,5 @@ if (!results.length) {
 // =======================
 // 🔐 ログイン
 // =======================
-console.log("TOKEN:", process.env.DISCORD_TOKEN);
+console.log("Bot起動開始");
 client.login(process.env.DISCORD_TOKEN);
