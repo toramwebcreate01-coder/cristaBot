@@ -668,12 +668,15 @@ const embed = new EmbedBuilder()
     // ======================
     if (interaction.commandName === "search") {
 
-      if (interaction.channelId !== SEARCH_CHANNEL_ID) {
-  return interaction.reply({
-    content: "検索チャンネルで使用してください",
-    ephemeral: true
-  });
-}
+  console.log("現在:", interaction.channel.id);
+  console.log("設定:", SEARCH_CHANNEL_ID);
+
+  if (String(interaction.channel.id) !== String(SEARCH_CHANNEL_ID)) {
+    return interaction.reply({
+      content: "検索チャンネルで使用してください",
+      ephemeral: true
+    });
+  }
 
       await interaction.deferReply({
   ephemeral: true
