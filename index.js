@@ -323,30 +323,29 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
       // 進化追加
       if (interaction.customId === "modal_add_evo") {
 
-        const from = interaction.fields.getTextInputValue("from");
-        const to = interaction.fields.getTextInputValue("to");
+  const from = interaction.fields.getTextInputValue("from");
+  const to = interaction.fields.getTextInputValue("to");
 
-        const fromId = getCrystalByName(from)?.id;
-        const toId = getCrystalByName(to)?.id;
+  const fromId = getCrystalByName(from)?.id;
+  const toId = getCrystalByName(to)?.id;
 
-        if (!fromId || !toId) {
-          return interaction.reply({
-            content: "❌ クリスタが見つかりません",
-             flags: 64
-});
-        }
+  if (!fromId || !toId) {
+    return interaction.reply({
+      content: "❌ クリスタが見つかりません",
+      flags: 64
+    });
+  }
 
-        db.prepare(`
- db.prepare(`
-  INSERT INTO evolutions (from_id, to_id)
-  VALUES (?, ?)
-`).run(fromId, toId);
+  db.prepare(`
+    INSERT INTO evolutions (from_id, to_id)
+    VALUES (?, ?)
+  `).run(fromId, toId);
 
-        return interaction.reply({
-          content: `✅ ${from} → ${to} を追加しました`,
-           flags: 64
-});
-      }
+  return interaction.reply({
+    content: `✅ ${from} → ${to} を追加しました`,
+    flags: 64
+  });
+}
 //クリスタ編集
 if (interaction.customId.startsWith("modal_edit_")) {
 
