@@ -610,53 +610,55 @@ const type = new TextInputBuilder()
 
  if (interaction.isStringSelectMenu()) {
 
-      if (interaction.customId === "admin_select_crystal") {
+  if (interaction.customId === "admin_select_crystal") {
 
-        const id = interaction.values[0];
-        const crystal = getCrystalWithStats(id);
+    const id = interaction.values[0];
+    const crystal = getCrystalWithStats(id);
 
-        if (!crystal) {
-          return interaction.reply({
-            content: "データなし",
-            ephemeral: true
-          });
-        }
+    if (!crystal) {
+      return interaction.reply({
+        content: "データなし",
+        ephemeral: true
+      });
+    }
 
-        const statsText = (crystal.stats || [])
-  .map(s => {
-    const icon = s.unit === "%" ? "🔵" : "⚪";
-    const sign = s.value >= 0 ? "+" : "";
-    return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
-  })
-  .join("\n");
+    const statsText = (crystal.stats || [])
+      .map(s => {
+        const icon = s.unit === "%" ? "🔵" : "⚪";
+        const sign = s.value >= 0 ? "+" : "";
+        return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
+      })
+      .join("\n");
 
-const embed = new EmbedBuilder()
-  .setTitle(`🧩 ${crystal.name}`)
-  .setDescription(statsText || "ステータスなし")
-  .setColor(TYPE_COLOR[crystal.type] || 0x95A5A6)
-  .addFields({
-    name: "タイプ",
-    value: TYPE_LABEL[crystal.type] || crystal.type,
-    inline: true
-  });
- 
- const row = new ActionRowBuilder().addComponents(
-  new ButtonBuilder()
-    .setCustomId(`admin_edit_${crystal.id}`) // ⭐追加
-    .setLabel("✏️ 編集")
-    .setStyle(ButtonStyle.Primary),
+    const embed = new EmbedBuilder()
+      .setTitle(`🧩 ${crystal.name}`)
+      .setDescription(statsText || "ステータスなし")
+      .setColor(TYPE_COLOR[crystal.type] || 0x95A5A6)
+      .addFields({
+        name: "タイプ",
+        value: TYPE_LABEL[crystal.type] || crystal.type,
+        inline: true
+      });
 
-  new ButtonBuilder()
-    .setCustomId(`admin_delete_${crystal.id}`)
-    .setLabel("🗑 削除")
-    .setStyle(ButtonStyle.Danger)
-);
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`admin_edit_${crystal.id}`)
+        .setLabel("✏️ 編集")
+        .setStyle(ButtonStyle.Primary),
 
-       return interaction.reply({
-  embeds: [embed],
-  components: [row],
-  flags: 64
-});
+      new ButtonBuilder()
+        .setCustomId(`admin_delete_${crystal.id}`)
+        .setLabel("🗑 削除")
+        .setStyle(ButtonStyle.Danger)
+    );
+
+    return interaction.reply({
+      embeds: [embed],
+      components: [row],
+      flags: 64
+    });
+  }
+}
 
     // ======================
     // ⛔ コマンド以外除外
