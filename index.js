@@ -666,17 +666,26 @@ const embed = new EmbedBuilder()
     // ======================
     // 🔍 search
     // ======================
-    if (interaction.commandName === "search") {
+   if (interaction.commandName === "search") {
 
-  console.log("現在:", interaction.channel.id);
+  console.log("現在:", interaction.channelId);
   console.log("設定:", SEARCH_CHANNEL_ID);
 
-  if (String(interaction.channel.id) !== String(SEARCH_CHANNEL_ID)) {
+  if (String(interaction.channelId) !== String(SEARCH_CHANNEL_ID)) {
+
+    console.log("チャンネル不一致");
+
     return interaction.reply({
       content: "検索チャンネルで使用してください",
       ephemeral: true
     });
   }
+
+  console.log("チャンネル一致");
+
+  await interaction.deferReply({
+    ephemeral: true
+  });
 
       await interaction.deferReply({
   ephemeral: true
