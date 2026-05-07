@@ -685,10 +685,6 @@ const embed = new EmbedBuilder()
     ephemeral: true
   });
 
-      await interaction.deferReply({
-  ephemeral: true
-});
-
 const raw = interaction.options.getString("query").toLowerCase();
 
 const words = raw.split(" ");
