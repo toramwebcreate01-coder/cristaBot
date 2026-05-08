@@ -123,9 +123,13 @@ function getCrystalWithStats(id) {
 
   while (true) {
 
+    console.log("find current =", current);
+
     const parent = edges.find(
       e => String(e.to_id) === current
     );
+
+    console.log("parent =", parent);
 
     if (!parent) break;
 
@@ -136,6 +140,8 @@ function getCrystalWithStats(id) {
 }
    
 function getEvolutionTreeGraph(startId) {
+
+  console.log("tree start =", startId);
 
   startId = Number(startId);
 
@@ -598,14 +604,19 @@ if (interaction.customId.startsWith("admin_delete_")) {
       // 進化表示
       if (interaction.customId.startsWith("evo_")) {
 
-        await interaction.deferReply({
-  flags: 64
-});
+  console.log("evo button =", interaction.customId);
 
-        const id = interaction.customId.replace("evo_", "");
-        const text = getEvolutionTreeGraph(id);
+  await interaction.deferReply({
+    flags: 64
+  });
 
-        return interaction.editReply({
+  const id = interaction.customId.replace("evo_", "");
+
+  console.log("evo id =", id);
+
+  const text = getEvolutionTreeGraph(id);
+
+  return interaction.editReply({
           embeds: [
             new EmbedBuilder()
               .setTitle("🌿 進化ツリー")
