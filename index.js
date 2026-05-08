@@ -209,8 +209,9 @@ return `${s.name} ${sign}${s.value}${s.unit}`;
         ? ""
         : (isLast ? "└ " : "├ ");
 
-    lines.push(`${prefix}${branch}🌱 ${c.name}`);
-
+   lines.push(
+  `${prefix}${branch}${TYPE_ICON[c.type] || "🔹"} ${c.name}`
+);
     if (stats) {
 
       const statPrefix =
