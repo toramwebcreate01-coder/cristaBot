@@ -791,15 +791,28 @@ const results = getAllCrystals()
     if (typeFilter && c.type !== typeFilter) return false;
 
     return keywords.every(keyword => {
-      return (c.stats || []).some(s => {
 
-        const matchName = normalize(s.name).includes(keyword);
-        const matchPlus = isPlus ? s.value > 0 : true;
-        const matchPercent = isPercent ? s.unit === "%" : true;
+  // クリスタ名一致
+  const crystalMatch =
+    normalize(c.name).includes(keyword);
 
-        return matchName && matchPlus && matchPercent;
-      });
-    });
+  // ステータス一致
+  const statMatch = (c.stats || []).some(s => {
+
+    const matchName =
+      normalize(s.name).includes(keyword);
+
+    const matchPlus =
+      isPlus ? s.value > 0 : true;
+
+    const matchPercent =
+      isPercent ? s.unit === "%" : true;
+
+    return matchName && matchPlus && matchPercent;
+  });
+
+  return crystalMatch || statMatch;
+});
   });
  
 
