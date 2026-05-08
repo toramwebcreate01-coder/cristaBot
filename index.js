@@ -121,14 +121,28 @@ function findRoot(id, edges) {
   let current = Number(id);
 
   while (true) {
-    const parent = edges.find(e => Number(e.to_id) === current);
+    function findRoot(id, edges) {
+
+  let current = Number(id);
+  const visited = new Set();
+
+  while (true) {
+
+    if (visited.has(current)) break;
+    visited.add(current);
+
+    const parent = edges.find(
+      e => Number(e.to_id) === current
+    );
+
     if (!parent) break;
+
     current = Number(parent.from_id);
   }
 
   return current;
 }
-
+   
 function getEvolutionTreeGraph(startId) {
 
   startId = Number(startId);
