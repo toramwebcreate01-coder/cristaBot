@@ -117,10 +117,6 @@ function getCrystalWithStats(id) {
   return { ...c, stats: getStatsById(id) };
 }
 
-function findRoot(id, edges) {
-  let current = Number(id);
-
-  while (true) {
     function findRoot(id, edges) {
 
   let current = Number(id);
