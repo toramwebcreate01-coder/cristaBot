@@ -156,54 +156,84 @@ function getEvolutionTreeGraph(startId) {
   const map = new Map();
   crystals.forEach(c => map.set(Number(c.id), c));
 
-  const visited = new Set();
   const lines = [];
 
-  const rootId = findRoot(startId, edges);
-  console.log("startId =", startId);
-console.log("rootId =", rootId);
-console.log(edges);
-  function walk(id, prefix = "", isLast = true) {
+  // ======================
+  // root探索
+  // ======================
 
-  id = Number(id);
+  function findRoot(id) {
 
-  if (visited.has(id)) return;
-  visited.add(id);
+    let current = Number(id);
 
-  const c = map.get(id);
-  if (!c) return;
+    while (true) {
 
-  const stats = (c.stats || [])
-    .map(s => {
-      const icon = s.unit === "%" ? "🔵" : "⚪";
-      const sign = s.value >= 0 ? "+" : "";
-      return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
-    })
-    .join("\n");
+      const parent = edges.find(
+        e => Number(e.to_id) === current
+      );
 
-  // ⭐ 修正①
-  const branch = prefix === "" ? "" : (isLast ? "└ " : "├ ");
-  lines.push(`${prefix}${branch}🌱 ${c.name}`);
+      if (!parent) break;
 
-  // ステータス
-  if (stats) {
-    const statPrefix = prefix + (isLast ? "  " : "│ ");
-    stats.split("\n").forEach(line => {
-      lines.push(`${statPrefix}${line}`);
-    });
+      current = Number(parent.from_id);
+    }
+
+    return current;
   }
 
-  const next = edges.filter(e => Number(e.from_id) === id);
+  const rootId = findRoot(startId);
 
-  next.forEach((n, index) => {
-    const isLastChild = index === next.length - 1;
+  // ======================
+  // tree描画
+  // ======================
 
-    // ⭐ 修正②（超重要）
-    const newPrefix = prefix + (isLast ? "  " : "│ ");
+  function walk(id, prefix = "", isLast = true) {
 
-    walk(n.to_id, newPrefix, isLastChild);
-  });
-}
+    id = Number(id);
+
+    const c = map.get(id);
+
+    if (!c) return;
+
+    const stats = (c.stats || [])
+      .map(s => {
+        const icon = s.unit === "%" ? "🔵" : "⚪";
+        const sign = s.value >= 0 ? "+" : "";
+        return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
+      })
+      .join("\n");
+
+    const branch =
+      prefix === ""
+        ? ""
+        : (isLast ? "└ " : "├ ");
+
+    lines.push(`${prefix}${branch}🌱 ${c.name}`);
+
+    if (stats) {
+
+      const statPrefix =
+        prefix + (isLast ? "  " : "│ ");
+
+      stats.split("\n").forEach(line => {
+        lines.push(`${statPrefix}${line}`);
+      });
+    }
+
+    const children = edges.filter(
+      e => Number(e.from_id) === id
+    );
+
+    children.forEach((child, index) => {
+
+      const last =
+        index === children.length - 1;
+
+      const newPrefix =
+        prefix + (isLast ? "  " : "│ ");
+
+      walk(child.to_id, newPrefix, last);
+    });
+  }
 
   walk(rootId);
 
