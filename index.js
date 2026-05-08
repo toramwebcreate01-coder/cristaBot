@@ -214,13 +214,13 @@ return `${s.name} ${sign}${s.value}${s.unit}`;
 );
     if (stats) {
 
-      const statPrefix =
-        prefix + (isLast ? "  " : "│ ");
+  const statPrefix =
+    prefix + (isLast ? "　" : "│ ");
 
-      stats.split("\n").forEach(line => {
-        lines.push(`${statPrefix}${line}`);
-      });
-    }
+  stats.split("\n").forEach(line => {
+    lines.push(`${statPrefix}│ ${line}`);
+  });
+}
 
     const children = edges.filter(
   e => String(e.from_id) === id
