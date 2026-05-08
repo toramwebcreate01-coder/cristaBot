@@ -119,21 +119,17 @@ function getCrystalWithStats(id) {
 
     function findRoot(id, edges) {
 
-  let current = Number(id);
-  const visited = new Set();
+  let current = String(id);
 
   while (true) {
 
-    if (visited.has(current)) break;
-    visited.add(current);
-
     const parent = edges.find(
-      e => Number(e.to_id) === current
+      e => String(e.to_id) === current
     );
 
     if (!parent) break;
 
-    current = Number(parent.from_id);
+    current = String(parent.from_id);
   }
 
   return current;
@@ -154,7 +150,7 @@ function getEvolutionTreeGraph(startId) {
   }));
 
   const map = new Map();
-  crystals.forEach(c => map.set(Number(c.id), c));
+crystals.forEach(c => map.set(String(c.id), c));
 
   const lines = [];
 
@@ -188,12 +184,12 @@ function getEvolutionTreeGraph(startId) {
 
   function walk(id, prefix = "", isLast = true) {
 
-    id = Number(id);
+  id = String(id);
 
-    const c = map.get(id);
+  const c = map.get(id);
 
-    if (!c) return;
-
+  if (!c) return;
+    
     const stats = (c.stats || [])
       .map(s => {
         const icon = s.unit === "%" ? "🔵" : "⚪";
@@ -220,8 +216,8 @@ function getEvolutionTreeGraph(startId) {
     }
 
     const children = edges.filter(
-      e => Number(e.from_id) === id
-    );
+  e => String(e.from_id) === id
+);
 
     children.forEach((child, index) => {
 
