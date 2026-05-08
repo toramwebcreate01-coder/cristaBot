@@ -832,7 +832,7 @@ if (!results.length) {
       })
       .join(" / ");
 
-    return `${i + 1}. ${icon} ${c.name}（${label}）\n   ${preview}`;
+    return `${i + 1}. ${icon} ${c.name} [${c.id}]（${label}）`;
   }).join("\n")
 )
       .setColor(0x00AEFF)
@@ -859,7 +859,7 @@ if (!results.length) {
       .setCustomId("select")
       .setPlaceholder("クリスタ選択")
       .addOptions(current.map(c => ({
-        label: c.name,
+        label: `${c.name} [${c.id}]`,
         value: String(c.id)
       })))
   );
