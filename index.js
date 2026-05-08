@@ -863,7 +863,9 @@ if (!results.length) {
 
       const collector = msg.createMessageComponentCollector({
   time: 60000,
-  filter: i => i.user.id === interaction.user.id
+  filter: i =>
+    i.user.id === interaction.user.id &&
+    ["prev", "next", "select"].includes(i.customId)
 });
 
  collector.on("collect", async i => {
