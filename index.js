@@ -131,7 +131,12 @@ function findRoot(id, edges) {
 
 function getEvolutionTreeGraph(startId) {
 
-  const edges = db.prepare(`SELECT from_id, to_id FROM evolutions`).all();
+  startId = Number(startId);
+
+  const edges = db.prepare(`
+    SELECT from_id, to_id
+    FROM evolutions
+  `).all();
 
   const crystals = getAllCrystals().map(c => ({
     ...c,
@@ -145,7 +150,9 @@ function getEvolutionTreeGraph(startId) {
   const lines = [];
 
   const rootId = findRoot(startId, edges);
-
+  console.log("startId =", startId);
+console.log("rootId =", rootId);
+console.log(edges);
   function walk(id, prefix = "", isLast = true) {
 
   id = Number(id);
@@ -329,8 +336,16 @@ return interaction.reply({
   const from = interaction.fields.getTextInputValue("from");
   const to = interaction.fields.getTextInputValue("to");
 
-  const fromId = getCrystalByName(from)?.id;
-  const toId = getCrystalByName(to)?.id;
+  const fromCrystal = getAllCrystals().find(c =>
+  c.name.includes(from)
+);
+
+const toCrystal = getAllCrystals().find(c =>
+  c.name.includes(to)
+);
+
+const fromId = fromCrystal?.id;
+const toId = toCrystal?.id;
 
   if (!fromId || !toId) {
     return interaction.reply({
