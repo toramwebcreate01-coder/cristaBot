@@ -198,9 +198,9 @@ crystals.forEach(c => map.set(String(c.id), c));
     
     const stats = (c.stats || [])
       .map(s => {
-        const icon = s.unit === "%" ? "🔵" : "⚪";
         const sign = s.value >= 0 ? "+" : "";
-        return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
+
+return `${s.name} ${sign}${s.value}${s.unit}`;
       })
       .join("\n");
 
@@ -691,9 +691,9 @@ const type = new TextInputBuilder()
 
     const statsText = (crystal.stats || [])
       .map(s => {
-        const icon = s.unit === "%" ? "🔵" : "⚪";
         const sign = s.value >= 0 ? "+" : "";
-        return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
+
+return `${s.name} ${sign}${s.value}${s.unit}`;
       })
       .join("\n");
 
@@ -859,7 +859,7 @@ if (!results.length) {
       .setCustomId("select")
       .setPlaceholder("クリスタ選択")
       .addOptions(current.map(c => ({
-        label: `${c.name} [${c.id}]`,
+       label: c.name,
         value: String(c.id)
       })))
   );
@@ -902,9 +902,9 @@ if (!results.length) {
 
     const statsText = (target.stats || [])
       .map(s => {
-        const icon = s.unit === "%" ? "🔵" : "⚪";
         const sign = s.value >= 0 ? "+" : "";
-        return `${icon} ${s.name} ${sign}${s.value}${s.unit}`;
+
+return `${s.name} ${sign}${s.value}${s.unit}`;
       })
       .join("\n");
 
