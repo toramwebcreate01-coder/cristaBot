@@ -846,7 +846,7 @@ if (!results.length) {
       })
       .join(" / ");
 
-    return `${i + 1}. ${icon} ${c.name} [${c.id}]（${label}）`;
+    return `${i + 1}. ${icon} ${c.name}（${label}）\n   ${preview}`;
   }).join("\n")
 )
       .setColor(0x00AEFF)
