@@ -759,28 +759,105 @@ return `${s.name} ${sign}${s.value}${s.unit}`;
 
 const raw = interaction.options.getString("query").toLowerCase();
 
-const words = raw.split(" ");
+const searchWords = raw.split(" ");
 
 let typeFilter = null;
+
 let keywords = [];
 
-// ⭐ 分解
-for (const w of words) {
+let signFilter = null;
+let percentFilter = false;
+
+let sortMode = null;
+
+let minValue = null;
+let maxValue = null;
+let exactValue = null;
+
+// ======================
+// 検索ワード解析
+// ======================
+
+for (const w of searchWords) {
+
+  // タイプ
   if (TYPE_MAP[w]) {
     typeFilter = TYPE_MAP[w];
-  } else {
-    keywords.push(w);
+    continue;
   }
+
+  // ソート
+  if (w === "asc" || w === "worst") {
+    sortMode = "asc";
+    continue;
+  }
+
+  if (w === "desc" || w === "top") {
+    sortMode = "desc";
+    continue;
+  }
+
+  // %
+  if (w.includes("%")) {
+    percentFilter = true;
+  }
+
+  // +
+  if (w.includes("+")) {
+    signFilter = "plus";
+  }
+
+  // -
+  if (w.includes("-")) {
+    signFilter = "minus";
+  }
+
+  // >=
+  const gte = w.match(/^(.+?)>=(-?\d+)$/);
+
+  if (gte) {
+    keywords.push(normalize(gte[1]));
+    minValue = Number(gte[2]);
+    continue;
+  }
+
+  // <=
+  const lte = w.match(/^(.+?)<=(-?\d+)$/);
+
+  if (lte) {
+    keywords.push(normalize(lte[1]));
+    maxValue = Number(lte[2]);
+    continue;
+  }
+
+  // =
+  const exact = w.match(/^(.+?)=(-?\d+)$/);
+
+  if (exact) {
+    keywords.push(normalize(exact[1]));
+    exactValue = Number(exact[2]);
+    continue;
+  }
+
+  // 範囲 atk5-10
+  const range = w.match(/^(.+?)(-?\d+)-(-?\d+)$/);
+
+  if (range) {
+    keywords.push(normalize(range[1]));
+    minValue = Number(range[2]);
+    maxValue = Number(range[3]);
+    continue;
+  }
+
+  keywords.push(
+    normalize(w.replace(/[+%\-]/g, ""))
+  );
 }
 
-// ⭐ フラグ
-const isPercent = raw.includes("%");
-const isPlus = raw.includes("+");
+// ======================
+// 検索
+// ======================
 
-// ⭐ 正規化
-keywords = keywords.map(k => normalize(k));
-
-// ⭐ 検索
 const results = getAllCrystals()
   .map(c => ({
     ...c,
@@ -788,33 +865,107 @@ const results = getAllCrystals()
   }))
   .filter(c => {
 
-    if (typeFilter && c.type !== typeFilter) return false;
+    // タイプ
+    if (typeFilter && c.type !== typeFilter) {
+      return false;
+    }
 
     return keywords.every(keyword => {
 
-  // クリスタ名一致
-  const crystalMatch =
-    normalize(c.name).includes(keyword);
+      // 名前検索
+      const crystalMatch =
+        normalize(c.name).includes(keyword);
 
-  // ステータス一致
-  const statMatch = (c.stats || []).some(s => {
+      // ステータス検索
+      const statMatch = (c.stats || []).some(s => {
 
-    const matchName =
-      normalize(s.name).includes(keyword);
+        const statName = normalize(s.name);
 
-    const matchPlus =
-      isPlus ? s.value > 0 : true;
+        // 完全一致
+        const matchName =
+          statName === keyword;
 
-    const matchPercent =
-      isPercent ? s.unit === "%" : true;
+        // +条件
+        const matchPlus =
+          signFilter === "plus"
+            ? s.value > 0
+            : true;
 
-    return matchName && matchPlus && matchPercent;
+        // -条件
+        const matchMinus =
+          signFilter === "minus"
+            ? s.value < 0
+            : true;
+
+        // %条件
+        const matchPercent =
+          percentFilter
+            ? s.unit === "%"
+            : true;
+
+        // 最小
+        const matchMin =
+          minValue !== null
+            ? s.value >= minValue
+            : true;
+
+        // 最大
+        const matchMax =
+          maxValue !== null
+            ? s.value <= maxValue
+            : true;
+
+        // 完全一致数値
+        const matchExact =
+          exactValue !== null
+            ? s.value === exactValue
+            : true;
+
+        return (
+          matchName &&
+          matchPlus &&
+          matchMinus &&
+          matchPercent &&
+          matchMin &&
+          matchMax &&
+          matchExact
+        );
+      });
+
+      return crystalMatch || statMatch;
+    });
   });
 
-  return crystalMatch || statMatch;
-});
+// ======================
+// ソート
+// ======================
+
+if (sortMode && keywords.length > 0) {
+
+  const targetKeyword = keywords[0];
+
+  results.sort((a, b) => {
+
+    const aStat = (a.stats || []).find(
+      s => normalize(s.name) === targetKeyword
+    );
+
+    const bStat = (b.stats || []).find(
+      s => normalize(s.name) === targetKeyword
+    );
+
+    const aValue = aStat ? aStat.value : 0;
+    const bValue = bStat ? bStat.value : 0;
+
+    return sortMode === "desc"
+      ? bValue - aValue
+      : aValue - bValue;
   });
- 
+}
+
+// ======================
+// 結果なし
+// ======================
 
 if (!results.length) {
   return interaction.editReply("見つかりませんでした");
