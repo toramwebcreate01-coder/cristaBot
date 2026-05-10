@@ -869,7 +869,7 @@ for (const w of searchWords) {
     continue;
   }
 
-  keywords.push(normalize(w));
+  keywords.push(w);
 }
 
 // ======================
