@@ -901,8 +901,7 @@ const results = getAllCrystals()
     return false;
   }
 
-  // ⭐ 固定値が存在する場合は%
-  を除外
+  // ⭐ 固定値が存在する場合は%を除外
   if (
     !hasPercent &&
     hasFlatStat &&
