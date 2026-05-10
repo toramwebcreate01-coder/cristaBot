@@ -954,15 +954,15 @@ const results = getAllCrystals()
 
           // +条件
           const matchPlus =
-            signFilter === "plus"
-              ? s.value > 0
-              : true;
+          isPlus
+          ? s.value > 0
+          : true;
 
           // -条件
-          const matchMinus =
-            signFilter === "minus"
-              ? s.value < 0
-              : true;
+         const matchMinus =
+  　　　　isMinus
+    　　　? s.value < 0
+    　　　: true;
 
           // 最小
           const matchMin =
