@@ -913,6 +913,7 @@ const crystalMatch =
   const statName =
     normalize(s.name);
 
+  // 記号なし名
   const cleanKeyword =
     normalize(
       keyword.replace(/[+%\-]/g, "")
@@ -923,69 +924,77 @@ const crystalMatch =
     return false;
   }
 
-  // 記号判定
-  const isPlus =
-  keyword.includes("+") &&
-  !keyword.includes("%");
-
-const isMinus =
-  keyword.includes("-") &&
-  !keyword.includes("%");
-
-　const isPlusPercent =
-  keyword.includes("+%");
-
-const isMinusPercent =
-  keyword.includes("-%");
-
+  // 検索種類
   const isPercent =
     keyword.includes("%");
 
-  // +検索
-  if (isPlus && s.value <= 0) {
-    return false;
-  }
+  const isPlusPercent =
+    keyword.includes("+%");
 
-  // -検索
-  if (isMinus && s.value >= 0) {
-    return false;
-  }
+  const isMinusPercent =
+    keyword.includes("-%");
 
-  // %検索
+  const isPlus =
+    keyword.includes("+") &&
+    !isPercent;
+
+  const isMinus =
+    keyword.includes("-") &&
+    !isPercent;
+
+  // =====================
+  // %
+  // =====================
+
   if (isPercent) {
 
-  // %のみ
-  if (s.unit !== "%") {
-    return false;
-  }
+    // %以外除外
+    if (s.unit !== "%") {
+      return false;
+    }
 
-  // +%
-  if (
-    isPlusPercent &&
-    s.value <= 0
-  ) {
-    return false;
-  }
+    // +%
+    if (
+      isPlusPercent &&
+      s.value <= 0
+    ) {
+      return false;
+    }
 
-  // -%
-  if (
-    isMinusPercent &&
-    s.value >= 0
-  ) {
-    return false;
-  }
+    // -%
+    if (
+      isMinusPercent &&
+      s.value >= 0
+    ) {
+      return false;
+    };
 
-}
-  else {
+  } else {
 
-    // 固定値優先判定
+    // 固定値優先
     const hasFlatStat =
       flatStatNames.has(cleanKeyword);
 
-    // 固定値存在時は%を除外
+    // 固定値が存在するなら%を除外
     if (
       hasFlatStat &&
       s.unit === "%"
+    ) {
+      return false;
+    }
+
+    // 固定値+
+    if (
+      isPlus &&
+      s.value <= 0
+    ) {
+      return false;
+    }
+
+    // 固定値-
+    if (
+      isMinus &&
+      s.value >= 0
     ) {
       return false;
     }
