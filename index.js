@@ -775,6 +775,26 @@ let maxValue = null;
 let exactValue = null;
 
 // ======================
+// 固定値が存在するステータス一覧
+// ======================
+
+const flatStatNames = new Set();
+
+getAllCrystals().forEach(c => {
+
+  const stats = getStatsById(c.id);
+
+  stats.forEach(s => {
+
+    if (s.unit !== "%") {
+      flatStatNames.add(
+        normalize(s.name)
+      );
+    }
+  });
+});
+     
+// ======================
 // 検索ワード解析
 // ======================
 
@@ -883,41 +903,42 @@ const results = getAllCrystals()
     keyword.replace(/[+%\-]/g, "")
   );
 
-  // ⭐ 同名ステータス取得
-  const hasFlatStat =
+  // 固定値ステータス存在判定
+const hasFlatStat =
   flatStatNames.has(cleanKeyword);
-  // ⭐ %検索か
-  const hasPercent = keyword.includes("%");
 
-  // ⭐ %指定あり → %のみ
-  if (hasPercent && s.unit !== "%") {
-    return false;
-  }
+// %検索か
+const hasPercent =
+  keyword.includes("%");
 
-  // ⭐ 固定値が存在する場合は%を除外
-  if (
-    !hasPercent &&
-    hasFlatStat &&
-    s.unit === "%"
-  ) {
-    return false;
-  }
+// +検索か
+const isPlus =
+  keyword.includes("+");
 
-// 固定値が存在するステータス一覧
-const flatStatNames = new Set();
+// -検索か
+const isMinus =
+  keyword.includes("-");
 
-getAllCrystals().forEach(c => {
+// %指定あり
+// → %のみ
+if (
+  hasPercent &&
+  s.unit !== "%"
+) {
+  return false;
+}
 
-  const stats = getStatsById(c.id);
-
-  stats.forEach(s => {
-
-    if (s.unit !== "%") {
-      flatStatNames.add(
-        normalize(s.name)
-      );
-    }
-  });
+// 固定値が存在し、
+// + または - 検索時
+// → %除外
+if (
+  !hasPercent &&
+  hasFlatStat &&
+  (isPlus || isMinus) &&
+  s.unit === "%"
+) {
+  return false;
+}
 });
 
   const matchName =
