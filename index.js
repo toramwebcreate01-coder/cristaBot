@@ -849,9 +849,7 @@ for (const w of searchWords) {
     continue;
   }
 
-  keywords.push(
-    normalize(w.replace(/[+%\-]/g, ""))
-  );
+  keywords.push(normalize(w));
 }
 
 // ======================
@@ -879,11 +877,42 @@ const results = getAllCrystals()
       // ステータス検索
       const statMatch = (c.stats || []).some(s => {
 
-        const statName = normalize(s.name);
+  const statName = normalize(s.name);
 
-        // 完全一致
-        const matchName =
-          statName === keyword;
+  const cleanKeyword = normalize(
+    keyword.replace(/[+%\-]/g, "")
+  );
+
+  // ⭐ 同名ステータス取得
+  const sameNameStats = (c.stats || []).filter(
+    x => normalize(x.name) === cleanKeyword
+  );
+
+  // ⭐ 固定値が存在するか
+  const hasFlatStat = sameNameStats.some(
+    x => x.unit !== "%"
+  );
+
+  // ⭐ %検索か
+  const hasPercent = keyword.includes("%");
+
+  // ⭐ %指定あり → %のみ
+  if (hasPercent && s.unit !== "%") {
+    return false;
+  }
+
+  // ⭐ 固定値が存在する場合は%
+  を除外
+  if (
+    !hasPercent &&
+    hasFlatStat &&
+    s.unit === "%"
+  ) {
+    return false;
+  }
+
+  const matchName =
+    statName === cleanKeyword;
 
         // +条件
         const matchPlus =
@@ -898,10 +927,20 @@ const results = getAllCrystals()
             : true;
 
         // %条件
-        const matchPercent =
-          percentFilter
-            ? s.unit === "%"
-            : true;
+        const hasPercent = keyword.includes("%");
+
+// %指定あり → %のみ
+if (hasPercent && s.unit !== "%") {
+  return false;
+}
+
+// %指定なし → 固定値のみ
+const hasPercent = keyword.includes("%");
+
+// %指定あり → %のみ
+if (hasPercent && s.unit !== "%") {
+  return false;
+}
 
         // 最小
         const matchMin =
@@ -922,14 +961,13 @@ const results = getAllCrystals()
             : true;
 
         return (
-          matchName &&
-          matchPlus &&
-          matchMinus &&
-          matchPercent &&
-          matchMin &&
-          matchMax &&
-          matchExact
-        );
+  matchName &&
+  matchPlus &&
+  matchMinus &&
+  matchMin &&
+  matchMax &&
+  matchExact
+);
       });
 
       return crystalMatch || statMatch;
