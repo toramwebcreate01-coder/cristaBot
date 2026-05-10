@@ -957,8 +957,7 @@ const crystalMatch =
     const hasFlatStat =
       flatStatNames.has(cleanKeyword);
 
-    // 固定値存在時は%
-    を除外
+    // 固定値存在時は%を除外
     if (
       hasFlatStat &&
       s.unit === "%"
