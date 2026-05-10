@@ -884,15 +884,8 @@ const results = getAllCrystals()
   );
 
   // ⭐ 同名ステータス取得
-  const sameNameStats = (c.stats || []).filter(
-    x => normalize(x.name) === cleanKeyword
-  );
-
-  // ⭐ 固定値が存在するか
-  const hasFlatStat = sameNameStats.some(
-    x => x.unit !== "%"
-  );
-
+  const hasFlatStat =
+  flatStatNames.has(cleanKeyword);
   // ⭐ %検索か
   const hasPercent = keyword.includes("%");
 
@@ -909,6 +902,23 @@ const results = getAllCrystals()
   ) {
     return false;
   }
+
+// 固定値が存在するステータス一覧
+const flatStatNames = new Set();
+
+getAllCrystals().forEach(c => {
+
+  const stats = getStatsById(c.id);
+
+  stats.forEach(s => {
+
+    if (s.unit !== "%") {
+      flatStatNames.add(
+        normalize(s.name)
+      );
+    }
+  });
+});
 
   const matchName =
     statName === cleanKeyword;
