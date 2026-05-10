@@ -925,10 +925,18 @@ const crystalMatch =
 
   // 記号判定
   const isPlus =
-    keyword.includes("+");
+  keyword.includes("+") &&
+  !keyword.includes("%");
 
-  const isMinus =
-    keyword.includes("-");
+const isMinus =
+  keyword.includes("-") &&
+  !keyword.includes("%");
+
+　const isPlusPercent =
+  keyword.includes("+%");
+
+const isMinusPercent =
+  keyword.includes("-%");
 
   const isPercent =
     keyword.includes("%");
@@ -946,12 +954,29 @@ const crystalMatch =
   // %検索
   if (isPercent) {
 
-    // %のみ
-    if (s.unit !== "%") {
-      return false;
-    }
+  // %のみ
+  if (s.unit !== "%") {
+    return false;
+  }
 
-  } else {
+  // +%
+  if (
+    isPlusPercent &&
+    s.value <= 0
+  ) {
+    return false;
+  }
+
+  // -%
+  if (
+    isMinusPercent &&
+    s.value >= 0
+  ) {
+    return false;
+  }
+
+}
+  else {
 
     // 固定値優先判定
     const hasFlatStat =
