@@ -894,13 +894,18 @@ const results = getAllCrystals()
     return keywords.every(keyword => {
 
       // 名前検索
-      const crystalMatch =
-        normalize(c.name)
-          .includes(
-            normalize(
-              keyword.replace(/[+%\-]/g, "")
-            )
-          );
+     const hasSymbolSearch =
+  keyword.includes("+") ||
+  keyword.includes("-") ||
+  keyword.includes("%");
+
+const crystalMatch =
+  hasSymbolSearch
+    ? false
+    : normalize(c.name)
+        .includes(
+          normalize(keyword)
+        );
 
       // ステータス検索
       const statMatch =
