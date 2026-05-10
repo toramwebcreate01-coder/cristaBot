@@ -926,22 +926,6 @@ const results = getAllCrystals()
             ? s.value < 0
             : true;
 
-        // %条件
-        const hasPercent = keyword.includes("%");
-
-// %指定あり → %のみ
-if (hasPercent && s.unit !== "%") {
-  return false;
-}
-
-// %指定なし → 固定値のみ
-const hasPercent = keyword.includes("%");
-
-// %指定あり → %のみ
-if (hasPercent && s.unit !== "%") {
-  return false;
-}
-
         // 最小
         const matchMin =
           minValue !== null
