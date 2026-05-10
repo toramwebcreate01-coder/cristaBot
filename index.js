@@ -884,7 +884,10 @@ const results = getAllCrystals()
   .filter(c => {
 
     // タイプ
-    if (typeFilter && c.type !== typeFilter) {
+    if (
+      typeFilter &&
+      c.type !== typeFilter
+    ) {
       return false;
     }
 
@@ -892,99 +895,107 @@ const results = getAllCrystals()
 
       // 名前検索
       const crystalMatch =
-        normalize(c.name).includes(keyword);
+        normalize(c.name)
+          .includes(
+            normalize(
+              keyword.replace(/[+%\-]/g, "")
+            )
+          );
 
       // ステータス検索
-      const statMatch = (c.stats || []).some(s => {
+      const statMatch =
+        (c.stats || []).some(s => {
 
-  const statName = normalize(s.name);
+          const statName =
+            normalize(s.name);
 
-  const cleanKeyword = normalize(
-    keyword.replace(/[+%\-]/g, "")
-  );
+          const cleanKeyword =
+            normalize(
+              keyword.replace(/[+%\-]/g, "")
+            );
 
-  // 固定値ステータス存在判定
-const hasFlatStat =
-  flatStatNames.has(cleanKeyword);
+          // 固定値存在判定
+          const hasFlatStat =
+            flatStatNames.has(
+              cleanKeyword
+            );
 
-// %検索か
-const hasPercent =
-  keyword.includes("%");
+          // 記号判定
+          const hasPercent =
+            keyword.includes("%");
 
-// +検索か
-const isPlus =
-  keyword.includes("+");
+          const isPlus =
+            keyword.includes("+");
 
-// -検索か
-const isMinus =
-  keyword.includes("-");
+          const isMinus =
+            keyword.includes("-");
 
-// %指定あり
-// → %のみ
-if (
-  hasPercent &&
-  s.unit !== "%"
-) {
-  return false;
-}
+          // %検索
+          if (
+            hasPercent &&
+            s.unit !== "%"
+          ) {
+            return false;
+          }
 
-// 固定値が存在し、
-// + または - 検索時
-// → %除外
-if (
-  !hasPercent &&
-  hasFlatStat &&
-  (isPlus || isMinus) &&
-  s.unit === "%"
-) {
-  return false;
-}
-});
+          // 固定値優先
+          if (
+            !hasPercent &&
+            hasFlatStat &&
+            (isPlus || isMinus) &&
+            s.unit === "%"
+          ) {
+            return false;
+          }
 
-  const matchName =
-    statName === cleanKeyword;
+          // 名前一致
+          const matchName =
+            statName === cleanKeyword;
 
-        // +条件
-        const matchPlus =
-          signFilter === "plus"
-            ? s.value > 0
-            : true;
+          // +条件
+          const matchPlus =
+            signFilter === "plus"
+              ? s.value > 0
+              : true;
 
-        // -条件
-        const matchMinus =
-          signFilter === "minus"
-            ? s.value < 0
-            : true;
+          // -条件
+          const matchMinus =
+            signFilter === "minus"
+              ? s.value < 0
+              : true;
 
-        // 最小
-        const matchMin =
-          minValue !== null
-            ? s.value >= minValue
-            : true;
+          // 最小
+          const matchMin =
+            minValue !== null
+              ? s.value >= minValue
+              : true;
 
-        // 最大
-        const matchMax =
-          maxValue !== null
-            ? s.value <= maxValue
-            : true;
+          // 最大
+          const matchMax =
+            maxValue !== null
+              ? s.value <= maxValue
+              : true;
 
-        // 完全一致数値
-        const matchExact =
-          exactValue !== null
-            ? s.value === exactValue
-            : true;
+          // 完全一致
+          const matchExact =
+            exactValue !== null
+              ? s.value === exactValue
+              : true;
 
-        return (
-  matchName &&
-  matchPlus &&
-  matchMinus &&
-  matchMin &&
-  matchMax &&
-  matchExact
-);
-      });
+          return (
+            matchName &&
+            matchPlus &&
+            matchMinus &&
+            matchMin &&
+            matchMax &&
+            matchExact
+          );
+        });
 
-      return crystalMatch || statMatch;
+      return (
+        crystalMatch ||
+        statMatch
+      );
     });
   });
 
