@@ -560,6 +560,42 @@ return interaction.reply({
 });
 }
 
+if (interaction.customId.startsWith("modal_add_stat_")) {
+
+    const crystalId = interaction.customId.replace(
+        "modal_add_stat_",
+        ""
+    );
+
+    const name =
+        interaction.fields.getTextInputValue("name");
+
+    const value =
+        Number(
+            interaction.fields.getTextInputValue("value")
+        );
+
+    const unit =
+        interaction.fields.getTextInputValue("unit");
+
+    db.prepare(`
+        INSERT INTO stats
+        (crystal_id, name, value, unit)
+        VALUES (?, ?, ?, ?)
+    `).run(
+        crystalId,
+        name,
+        value,
+        unit
+    );
+
+    return interaction.reply({
+        content: "✅ ステータスを追加しました。",
+        flags: 64
+    });
+
+}
+      
 //編集
 if (interaction.customId.startsWith("modal_edit_stat_")) {
 
