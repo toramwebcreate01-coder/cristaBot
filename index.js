@@ -373,6 +373,29 @@ return interaction.reply({
 });
       }
 
+// ======================
+// 編集するクリスタ検索
+// ======================
+if (interaction.customId === "modal_edit_search") {
+
+  const name =
+    interaction.fields.getTextInputValue("name");
+
+  const crystal = getCrystalByName(name);
+
+  if (!crystal) {
+    return interaction.reply({
+      content: "そのクリスタは存在しません。",
+      flags: 64
+    });
+  }
+
+  return interaction.reply({
+    content: `見つかりました：${crystal.name}`,
+    flags: 64
+  });
+}
+
       // 進化追加
       if (interaction.customId === "modal_add_evo") {
 
