@@ -431,6 +431,31 @@ if (interaction.customId === "modal_edit_search") {
 
 }
 
+if (
+  interaction.customId.startsWith("modal_edit_name_")
+) {
+
+  const id = interaction.customId.replace(
+    "modal_edit_name_",
+    ""
+  );
+
+  const newName =
+    interaction.fields.getTextInputValue("new_name");
+
+  db.prepare(`
+    UPDATE crystals
+    SET name = ?
+    WHERE id = ?
+  `).run(newName, id);
+
+  return interaction.reply({
+    content: `✅ 名前を「${newName}」へ変更しました`,
+    flags: 64
+  });
+
+}
+
       // 進化追加
       if (interaction.customId === "modal_add_evo") {
 
@@ -759,6 +784,33 @@ const type = new TextInputBuilder()
   new ActionRowBuilder().addComponents(type),
   new ActionRowBuilder().addComponents(stats)
 );
+
+  return interaction.showModal(modal);
+}
+
+//名前変更ボタン
+if (
+  interaction.customId.startsWith("edit_name_")
+) {
+
+  const id = interaction.customId.replace(
+    "edit_name_",
+    ""
+  );
+
+  const modal = new ModalBuilder()
+    .setCustomId(`modal_edit_name_${id}`)
+    .setTitle("クリスタ名変更");
+
+  modal.addComponents(
+    new ActionRowBuilder().addComponents(
+      new TextInputBuilder()
+        .setCustomId("new_name")
+        .setLabel("新しいクリスタ名")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true)
+    )
+  );
 
   return interaction.showModal(modal);
 }
