@@ -941,6 +941,82 @@ return `${s.name} ${sign}${s.value}${s.unit}`;
       flags: 64
     });
   }
+
+//編集処理
+if (
+    interaction.isStringSelectMenu() &&
+    interaction.customId === "admin_stat_select"
+) {
+
+    const value = interaction.values[0];
+
+    // 追加
+    if (value.startsWith("add_")) {
+
+        const crystalId = value.replace("add_", "");
+
+        const modal = new ModalBuilder()
+            .setCustomId(`modal_add_stat_${crystalId}`)
+            .setTitle("ステータス追加");
+
+        modal.addComponents(
+
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId("name")
+                    .setLabel("ステータス名")
+                    .setStyle(TextInputStyle.Short)
+            ),
+
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId("value")
+                    .setLabel("値")
+                    .setStyle(TextInputStyle.Short)
+            ),
+
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId("unit")
+                    .setLabel("単位（%なら%、固定値なら空欄）")
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(false)
+            )
+
+        );
+
+        return interaction.showModal(modal);
+
+    }
+
+    // 編集・削除画面
+    const row = new ActionRowBuilder()
+        .addComponents(
+
+            new ButtonBuilder()
+                .setCustomId(`edit_stat_${value}`)
+                .setLabel("✏ 編集")
+                .setStyle(ButtonStyle.Primary),
+
+            new ButtonBuilder()
+                .setCustomId(`delete_stat_${value}`)
+                .setLabel("🗑 削除")
+                .setStyle(ButtonStyle.Danger)
+
+        );
+
+    return interaction.reply({
+
+        content: "操作を選択してください",
+
+        components: [row],
+
+        flags: 64
+
+    });
+
+}
+   
 }
 
     // ======================
