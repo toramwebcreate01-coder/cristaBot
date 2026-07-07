@@ -384,16 +384,46 @@ if (interaction.customId === "modal_edit_search") {
   const crystal = getCrystalByName(name);
 
   if (!crystal) {
-    return interaction.reply({
-      content: "そのクリスタは存在しません。",
-      flags: 64
-    });
-  }
+    const row = new ActionRowBuilder().addComponents(
 
-  return interaction.reply({
-    content: `見つかりました：${crystal.name}`,
-    flags: 64
-  });
+  new ButtonBuilder()
+    .setCustomId(`edit_name_${crystal.id}`)
+    .setLabel("✏ 名前変更")
+    .setStyle(ButtonStyle.Primary),
+
+  new ButtonBuilder()
+    .setCustomId(`edit_type_${crystal.id}`)
+    .setLabel("🛡 種類変更")
+    .setStyle(ButtonStyle.Secondary)
+
+);
+
+const row2 = new ActionRowBuilder().addComponents(
+
+  new ButtonBuilder()
+    .setCustomId(`edit_stats_${crystal.id}`)
+    .setLabel("📊 ステータス編集")
+    .setStyle(ButtonStyle.Success),
+
+  new ButtonBuilder()
+    .setCustomId(`edit_evo_${crystal.id}`)
+    .setLabel("🌳 進化編集")
+    .setStyle(ButtonStyle.Secondary)
+
+);
+
+return interaction.reply({
+
+  content:
+`🟡 ${crystal.name}
+
+編集する項目を選択してください。`,
+
+  components: [row, row2],
+
+  flags:64
+
+});
 }
 
       // 進化追加
