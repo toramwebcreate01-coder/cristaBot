@@ -105,9 +105,14 @@ function getCrystalByName(name) {
 
 function getStatsById(id) {
   return db.prepare(`
-    SELECT name, value, unit
+    SELECT
+      id,
+      name,
+      value,
+      unit
     FROM stats
     WHERE crystal_id = ?
+    ORDER BY id
   `).all(id);
 }
 
