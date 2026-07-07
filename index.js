@@ -815,6 +815,74 @@ if (
   return interaction.showModal(modal);
 }
 
+//ステータス編集ボタン
+if (interaction.customId.startsWith("edit_stats_")) {
+
+  const crystalId =
+    interaction.customId.replace("edit_stats_", "");
+
+  const crystal = getCrystalById(crystalId);
+
+  const stats = getStatsById(crystalId);
+
+  if (!crystal) {
+    return interaction.reply({
+      content: "クリスタが見つかりません。",
+      flags: 64
+    });
+  }
+
+  // セレクト項目作成
+  const options = stats.map(s => ({
+
+    label: `${s.name} ${s.value >= 0 ? "+" : ""}${s.value}${s.unit}`,
+
+    description: "編集または削除",
+
+    // ★ statsテーブルのIDを渡す
+    value: String(s.id)
+
+  }));
+
+  // 一番下に追加ボタン用
+  options.push({
+
+    label: "➕ 新しいステータスを追加",
+
+    description: "ステータス追加",
+
+    value: `add_${crystalId}`
+
+  });
+
+  const select =
+    new ActionRowBuilder().addComponents(
+
+      new StringSelectMenuBuilder()
+
+        .setCustomId("admin_stat_select")
+
+        .setPlaceholder("編集するステータス")
+
+        .addOptions(options)
+
+    );
+
+  return interaction.reply({
+
+    content:
+`🟡 ${crystal.name}
+
+編集するステータスを選択してください。`,
+
+    components: [select],
+
+    flags: 64
+
+  });
+
+}
+
     }
 
 
