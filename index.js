@@ -556,6 +556,48 @@ return interaction.reply({
   flags: 64
 });
 }
+
+//編集
+if (interaction.customId.startsWith("modal_edit_stat_")) {
+
+    const statId =
+        interaction.customId.replace("modal_edit_stat_", "");
+
+    const name =
+        interaction.fields.getTextInputValue("name");
+
+    const value =
+        Number(
+            interaction.fields.getTextInputValue("value")
+        );
+
+    const unit =
+        interaction.fields.getTextInputValue("unit");
+
+    db.prepare(`
+        UPDATE stats
+        SET
+            name = ?,
+            value = ?,
+            unit = ?
+        WHERE id = ?
+    `).run(
+        name,
+        value,
+        unit,
+        statId
+    );
+
+    return interaction.reply({
+
+        content: "✅ ステータスを更新しました。",
+
+        flags: 64
+
+    });
+
+}
+      
     }
 
     // ======================
@@ -885,6 +927,62 @@ if (interaction.customId.startsWith("edit_stats_")) {
     flags: 64
 
   });
+
+}
+
+//編集ボタン
+if (interaction.customId.startsWith("edit_stat_")) {
+
+    const statId =
+        interaction.customId.replace("edit_stat_", "");
+
+    const stat = db.prepare(`
+        SELECT *
+        FROM stats
+        WHERE id = ?
+    `).get(statId);
+
+    if (!stat) {
+        return interaction.reply({
+            content: "ステータスが見つかりません。",
+            flags: 64
+        });
+    }
+
+    const modal = new ModalBuilder()
+        .setCustomId(`modal_edit_stat_${statId}`)
+        .setTitle("ステータス編集");
+
+    modal.addComponents(
+
+        new ActionRowBuilder().addComponents(
+            new TextInputBuilder()
+                .setCustomId("name")
+                .setLabel("ステータス名")
+                .setStyle(TextInputStyle.Short)
+                .setValue(stat.name)
+        ),
+
+        new ActionRowBuilder().addComponents(
+            new TextInputBuilder()
+                .setCustomId("value")
+                .setLabel("値")
+                .setStyle(TextInputStyle.Short)
+                .setValue(String(stat.value))
+        ),
+
+        new ActionRowBuilder().addComponents(
+            new TextInputBuilder()
+                .setCustomId("unit")
+                .setLabel("単位")
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false)
+                .setValue(stat.unit ?? "")
+        )
+
+    );
+
+    return interaction.showModal(modal);
 
 }
 
