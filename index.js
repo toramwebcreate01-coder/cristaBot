@@ -496,9 +496,12 @@ const toId = toCrystal?.id;
   });
 }
 //クリスタ編集
-if (interaction.customId.startsWith("modal_edit_")) {
+if (interaction.customId.startsWith("modal_edit_crystal_")) {
 
-  const id = interaction.customId.replace("modal_edit_", "");
+  const id = interaction.customId.replace(
+    "modal_edit_crystal_",
+    ""
+  );
 
   const name = interaction.fields.getTextInputValue("name");
   const rawType = interaction.fields.getTextInputValue("type").toLowerCase();
@@ -801,8 +804,8 @@ if (interaction.customId.startsWith("admin_edit_")) {
   }
 
   const modal = new ModalBuilder()
-    .setCustomId(`modal_edit_${id}`)
-    .setTitle("クリスタ編集");
+  .setCustomId(`modal_edit_crystal_${id}`)
+  .setTitle("クリスタ編集");
 
   const name = new TextInputBuilder()
     .setCustomId("name")
