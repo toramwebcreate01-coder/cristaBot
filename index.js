@@ -373,7 +373,7 @@ for (const pair of statsRaw.split(/[ ,]+/)) {
 // ← for文を閉じる
 
 return interaction.reply({
-  content: `✅ ${name} を追加しました`,
+  content: `✅ ${name} を更新しました`,
   flags: 64
 });
       }
