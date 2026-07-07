@@ -477,6 +477,7 @@ return interaction.reply({
 
       // クリスタ追加UI
       if (interaction.customId === "admin_add_crystal") {
+        
 
         if (interaction.channelId !== ADMIN_CHANNEL_ID) {
   return interaction.reply({
@@ -512,6 +513,37 @@ return interaction.reply({
 
         return interaction.showModal(modal);
       }
+
+       // クリスタ編集UI
+      if (interaction.customId === "admin_edit") {
+        if (interaction.customId === "admin_edit") {
+
+  if (interaction.channelId !== ADMIN_CHANNEL_ID) {
+    return interaction.reply({
+      content: "管理チャンネルで使用してください",
+      flags: 64
+    });
+  }
+
+  const modal = new ModalBuilder()
+    .setCustomId("modal_edit_search")
+    .setTitle("クリスタ編集");
+
+  modal.addComponents(
+    new ActionRowBuilder().addComponents(
+      new TextInputBuilder()
+        .setCustomId("name")
+        .setLabel("編集するクリスタ名")
+        .setPlaceholder("例：ペリプラスティ")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true)
+    )
+  );
+
+  return interaction.showModal(modal);
+}
+
+}
 
       // 進化追加UI
       if (interaction.customId === "admin_add_evo") {
@@ -1236,8 +1268,9 @@ return `${s.name} ${sign}${s.value}${s.unit}`;
 });
       }
 
-      const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
+     const row = new ActionRowBuilder().addComponents(
+
+  new ButtonBuilder()
     .setCustomId("admin_add_crystal")
     .setLabel("🆕 クリスタ追加")
     .setStyle(ButtonStyle.Primary),
@@ -1246,6 +1279,11 @@ return `${s.name} ${sign}${s.value}${s.unit}`;
     .setCustomId("admin_add_evo")
     .setLabel("🔗 進化追加")
     .setStyle(ButtonStyle.Secondary),
+
+  new ButtonBuilder()
+    .setCustomId("admin_edit")
+    .setLabel("✏ 編集")
+    .setStyle(ButtonStyle.Primary),
 
   new ButtonBuilder()
     .setCustomId("admin_list")
