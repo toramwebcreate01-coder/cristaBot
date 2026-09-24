@@ -578,12 +578,16 @@ if (interaction.customId.startsWith("modal_add_stat_")) {
     const unit =
         interaction.fields.getTextInputValue("unit");
 
+    const condition =
+        interaction.fields.getTextInputValue("condition");
+
     db.prepare(`
         INSERT INTO stats
-        (crystal_id, name, value, unit)
-        VALUES (?, ?, ?, ?)
+        (crystal_id, condition, name, value, unit)
+        VALUES (?, ?, ?, ?, ?)
     `).run(
         crystalId,
+        condition,
         name,
         value,
         unit
