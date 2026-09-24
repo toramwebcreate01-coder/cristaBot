@@ -1041,9 +1041,6 @@ return interaction.showModal(modal);
 
 }
 
-    }
-
-
  if (interaction.isStringSelectMenu()) {
 
   if (interaction.customId === "admin_select_crystal") {
