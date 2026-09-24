@@ -617,14 +617,19 @@ if (interaction.customId.startsWith("modal_edit_stat_")) {
     const unit =
         interaction.fields.getTextInputValue("unit");
 
+    const condition =
+        interaction.fields.getTextInputValue("condition");
+
     db.prepare(`
         UPDATE stats
         SET
+            condition = ?,
             name = ?,
             value = ?,
             unit = ?
         WHERE id = ?
     `).run(
+        condition,
         name,
         value,
         unit,
@@ -640,8 +645,6 @@ if (interaction.customId.startsWith("modal_edit_stat_")) {
     });
 
 }
-      
-    }
 
     // ======================
     // 🔘 ボタン
@@ -993,39 +996,48 @@ if (interaction.customId.startsWith("edit_stat_")) {
     }
 
     const modal = new ModalBuilder()
-        .setCustomId(`modal_edit_stat_${statId}`)
-        .setTitle("ステータス編集");
+    .setCustomId(`modal_edit_stat_${statId}`)
+    .setTitle("ステータス編集");
 
-    modal.addComponents(
+modal.addComponents(
 
-        new ActionRowBuilder().addComponents(
-            new TextInputBuilder()
-                .setCustomId("name")
-                .setLabel("ステータス名")
-                .setStyle(TextInputStyle.Short)
-                .setValue(stat.name)
-        ),
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("name")
+            .setLabel("ステータス名")
+            .setStyle(TextInputStyle.Short)
+            .setValue(stat.name)
+    ),
 
-        new ActionRowBuilder().addComponents(
-            new TextInputBuilder()
-                .setCustomId("value")
-                .setLabel("値")
-                .setStyle(TextInputStyle.Short)
-                .setValue(String(stat.value))
-        ),
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("value")
+            .setLabel("値")
+            .setStyle(TextInputStyle.Short)
+            .setValue(String(stat.value))
+    ),
 
-        new ActionRowBuilder().addComponents(
-            new TextInputBuilder()
-                .setCustomId("unit")
-                .setLabel("単位")
-                .setStyle(TextInputStyle.Short)
-                .setRequired(false)
-                .setValue(stat.unit ?? "")
-        )
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("unit")
+            .setLabel("単位")
+            .setStyle(TextInputStyle.Short)
+            .setRequired(false)
+            .setValue(stat.unit ?? "")
+    ),
 
-    );
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("condition")
+            .setLabel("条件（例：片手剣装備時）")
+            .setStyle(TextInputStyle.Short)
+            .setRequired(false)
+            .setValue(stat.condition ?? "")
+    )
 
-    return interaction.showModal(modal);
+);
+
+return interaction.showModal(modal);
 
 }
 
