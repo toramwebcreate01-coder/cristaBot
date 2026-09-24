@@ -1096,31 +1096,39 @@ if (
             .setCustomId(`modal_add_stat_${crystalId}`)
             .setTitle("ステータス追加");
 
-        modal.addComponents(
+       modal.addComponents(
 
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId("name")
-                    .setLabel("ステータス名")
-                    .setStyle(TextInputStyle.Short)
-            ),
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("name")
+            .setLabel("ステータス名")
+            .setStyle(TextInputStyle.Short)
+    ),
 
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId("value")
-                    .setLabel("値")
-                    .setStyle(TextInputStyle.Short)
-            ),
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("value")
+            .setLabel("値")
+            .setStyle(TextInputStyle.Short)
+    ),
 
-            new ActionRowBuilder().addComponents(
-                new TextInputBuilder()
-                    .setCustomId("unit")
-                    .setLabel("単位（%なら%、固定値なら空欄）")
-                    .setStyle(TextInputStyle.Short)
-                    .setRequired(false)
-            )
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("unit")
+            .setLabel("単位（%なら%、固定値なら空欄）")
+            .setStyle(TextInputStyle.Short)
+            .setRequired(false)
+    ),
 
-        );
+    new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+            .setCustomId("condition")
+            .setLabel("条件（例：片手剣装備時）")
+            .setStyle(TextInputStyle.Short)
+            .setRequired(false)
+    )
+
+);
 
         return interaction.showModal(modal);
 
