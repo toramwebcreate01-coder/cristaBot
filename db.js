@@ -30,14 +30,3 @@ if (!columns.some(column => column.name === "condition")) {
 }
 
 module.exports = db;
-
-CREATE TABLE IF NOT EXISTS stats (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  crystal_id TEXT,
-  name TEXT,
-  value INTEGER,
-  unit TEXT
-);
-`);
-
-module.exports = db;
