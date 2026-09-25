@@ -645,7 +645,8 @@ if (interaction.customId.startsWith("modal_edit_stat_")) {
     });
 
 }
-
+}
+    
     // ======================
     // 🔘 ボタン
     // ======================
