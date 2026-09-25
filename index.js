@@ -109,7 +109,8 @@ function getStatsById(id) {
       id,
       name,
       value,
-      unit
+      unit,
+      condition
     FROM stats
     WHERE crystal_id = ?
     ORDER BY id
