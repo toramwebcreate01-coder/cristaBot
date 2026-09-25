@@ -1541,12 +1541,16 @@ if (!results.length) {
 
     // ⭐ 上位2つだけ表示（見やすさ重視）
     const preview = (c.stats || [])
-      .slice(0, 2)
-      .map(s => {
-        const sign = s.value >= 0 ? "+" : "";
-        return `${s.name}${sign}${s.value}${s.unit}`;
-      })
-      .join(" / ");
+  .slice(0, 2)
+  .map(s => {
+    const sign = s.value >= 0 ? "+" : "";
+    const condition = s.condition
+      ? `${s.condition}、`
+      : "";
+
+    return `${condition}${s.name}${sign}${s.value}${s.unit}`;
+  })
+  .join(" / ");
 
     return `${i + 1}. ${icon} ${c.name}（${label}）\n   ${preview}`;
   }).join("\n")
