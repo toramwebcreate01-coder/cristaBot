@@ -1331,11 +1331,24 @@ for (const w of searchWords) {
 // 検索
 // ======================
 
-const results = getAllCrystals()
+const allSearchData = getAllCrystals()
   .map(c => ({
     ...c,
     stats: getStatsById(c.id)
+  }));
+
+console.log(
+  "検索データ確認:",
+  allSearchData.map(c => ({
+    name: c.name,
+    stats: c.stats.map(s => ({
+      name: s.name,
+      condition: s.condition
+    }))
   }))
+);
+
+const results = allSearchData
   .filter(c => {
 
     // タイプ
