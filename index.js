@@ -522,38 +522,8 @@ if (!type) {
 WHERE id = ?
   `).run(name, type, id);
 
-  // 一旦全部削除
-  db.prepare(`
-    DELETE FROM stats WHERE crystal_id = ?
-  `).run(id);
-
-  // 再登録
- for (const pair of statsRaw.split(/[ ,]+/)) {
-
-  let [k, v] = pair.split("=");
-
-  if (!k || !v) continue;
-
-  k = k.trim();
-  v = v.trim();
-
-  let unit = "";
-  let value = 0;
-
-  if (v.includes("%")) {
-    unit = "%";
-    value = Number(v.replace("%", ""));
-  } else {
-    value = Number(v);
-  }
-
-  if (isNaN(value)) continue;
-
-  db.prepare(`
-    INSERT INTO stats (crystal_id, name, value, unit)
-    VALUES (?, ?, ?, ?)
-  `).run(crystalId, k, value, unit);
-}
+ // ステータスは変更しない
+  // ステータスの追加・編集は専用画面から行う
 
 return interaction.reply({
   content: `✅ ${name} を追加しました`,
