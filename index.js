@@ -1059,12 +1059,15 @@ return interaction.showModal(modal);
     }
 
     const statsText = (crystal.stats || [])
-      .map(s => {
-        const sign = s.value >= 0 ? "+" : "";
+  .map(s => {
+    const sign = s.value >= 0 ? "+" : "";
+    const condition = s.condition
+      ? `${s.condition}、`
+      : "";
 
-return `${s.name} ${sign}${s.value}${s.unit}`;
-      })
-      .join("\n");
+    return `${condition}${s.name} ${sign}${s.value}${s.unit}`;
+  })
+  .join("\n");
 
     const embed = new EmbedBuilder()
       .setTitle(`🧩 ${crystal.name}`)
