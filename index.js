@@ -947,7 +947,37 @@ if (interaction.customId.startsWith("edit_stats_")) {
   });
 
 }
+      
+// ステータス削除ボタン
+if (interaction.customId.startsWith("delete_stat_")) {
 
+    const statId =
+        interaction.customId.replace("delete_stat_", "");
+
+    const stat = db.prepare(`
+        SELECT *
+        FROM stats
+        WHERE id = ?
+    `).get(statId);
+
+    if (!stat) {
+        return interaction.reply({
+            content: "❌ ステータスが見つかりません。",
+            flags: 64
+        });
+    }
+
+    db.prepare(`
+        DELETE FROM stats
+        WHERE id = ?
+    `).run(statId);
+
+    return interaction.reply({
+        content: `🗑 「${stat.name}」を削除しました。`,
+        flags: 64
+    });
+}
+      
 //編集ボタン
 if (interaction.customId.startsWith("edit_stat_")) {
 
