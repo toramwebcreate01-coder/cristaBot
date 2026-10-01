@@ -1,5 +1,5 @@
 const Database = require('better-sqlite3');
-const db = new Database('./crystals.db');
+const db = new Database('./data/crystals.db');
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS crystals (
