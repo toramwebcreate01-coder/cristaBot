@@ -1504,9 +1504,10 @@ const crystalMatch =
 // ソート
 // ======================
 
+
 if (sortMode && keywords.length > 0) {
 
-  const targetKeyword = keywords[0];
+  const targetKeyword = normalize(keywords[0]);
 
   results.sort((a, b) => {
 
@@ -1518,14 +1519,15 @@ if (sortMode && keywords.length > 0) {
       s => normalize(s.name) === targetKeyword
     );
 
-    const aValue = aStat ? aStat.value : 0;
-    const bValue = bStat ? bStat.value : 0;
+    const aValue = aStat ? Number(aStat.value) : 0;
+    const bValue = bStat ? Number(bStat.value) : 0;
 
     return sortMode === "desc"
       ? bValue - aValue
       : aValue - bValue;
   });
 }
+
 
 // ======================
 // 結果なし
